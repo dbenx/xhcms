@@ -1,0 +1,216 @@
+{extend name="../../admin/view/main"}
+
+{block name='content'}
+<form action="{:sysuri()}" class="layui-card layui-form" data-auto="true" method="post">
+    <div class="layui-card-body">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">基本信息</li>
+                <li>URL规则设置</li>
+                <li>模板设置</li>
+                <li>栏目内容</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+
+                    <div class="layui-row layui-col-space30">
+                        <div class="layui-col-xs6">
+                            <label class="layui-form-item relative block">
+                                <span class="help-label"><b>上级栏目</b>Catalog rootid</span>
+                                <select name='rootid' class='layui-select' lay-search>
+                                    {eq name='vo.id' value=''}
+                                    <option value="0">======顶级栏目=====</option>
+                                    {foreach $menus as $menu}
+                                    {eq name='menu.id' value='$vo.rootid'}
+                                    <option selected value='{$menu.id}'>{$menu.name}</option>
+                                    {else}
+                                    <option value='{$menu.id}'>{$menu.name}</option>
+                                    {/eq}
+                                    {/foreach}
+                                    {else}
+                                    <option value="0">======顶级栏目=====</option>
+                                    {foreach $menus as $menu}
+                                    {eq name='menu.id' value='$vo.rootid'}
+                                    <option selected value='{$menu.id}'>{$menu.name}</option>
+                                    {else}
+                                    <option value='{$menu.id}'>{$menu.name}</option>
+                                    {/eq}
+                                    {/foreach}
+                                    {/eq}
+                                </select>
+                            </label>
+                        </div>
+                        <div class="layui-col-xs6">
+                            <label class="layui-form-item relative block">
+                                <span class="help-label"><b>栏目属性</b>Catalog Pid</span>
+                                <select name='pid' class='layui-select' lay-search>
+
+                                    {foreach ['普通栏目 pid=0','推荐栏目 pid=1'] as $k => $v}
+                                    {if (isset($vo.pid) and $vo.pid eq $k) or (empty($vo.pid) and $k eq 0)}
+                                    <option selected value='{$k}'>{$v}</option>
+                                    {else}
+                                    <option value='{$k}'>{$v}</option>
+                                    {/if}{/foreach}
+
+
+                                </select>
+                            </label>
+                        </div>
+                        <div class="layui-col-xs6">
+                            <div class="layui-form-item label-required-prev">
+                                <span class="help-label"><b>栏目排序</b>Catalog sortnum</span>
+                                <div class="relative block">
+                                    <input class="layui-input" name="sortnum" placeholder="" required
+                                           value='{$vo.sortnum|default="0"}'>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6">
+                            <div class="layui-form-item label-required-prev">
+                                <span class="help-label"><b>栏目状态</b>News Content</span>
+                                <div class="relative block">
+                                    <select name='status' class='layui-select' lay-search>
+                                        <option value='0'>隐藏[status='0']</option>
+                                        <option selected value='1'>显示[status='1']</option>
+                                        <option value='2'>不调用[status='0']</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <label class="layui-form-item relative block">
+                        <span class="help-label"><b>栏目名称</b>Catalog Name</span>
+                        <textarea class="layui-textarea" name="name" placeholder="栏目名称" required rows="10">{$vo.name|default=""}</textarea>
+                        <span class="help-block">如批量添加栏目名称，一行一个，自定义url可以栏目名后定义 例：关于我们|about</span>
+                    </label>
+
+                    <label class="layui-form-item relative block">
+                        <span class="help-label"><b>栏目别名</b>Catalog subname</span>
+                        <input class="layui-input" name="subname" placeholder="请输入栏目别名"
+                               value='{$vo.subname|default=""}'>
+                    </label>
+
+                    <div class="layui-form-item label-required-prev">
+                        <span class="help-label"><b>缩略图</b>Catalog pic</span>
+                        <div class="relative block label-required-null">
+                            <input class="layui-input think-bg-gray" name="pic" placeholder="请上传文章封面" readonly required
+                                   value='{$vo.pic|default=""}'>
+                            <a class="layui-icon layui-icon-upload input-right-icon" data-file data-field="cover"
+                               data-type="gif,png,jpg,jpeg"></a>
+                        </div>
+                    </div>
+                    <label class="layui-form-item relative block">
+                        <span class="help-label"><b>SEO 标题</b>Catalog title</span>
+                        <input class="layui-input" name="title" placeholder="" value='{$vo.title|default=""}'>
+                    </label>
+
+
+                    <label class="layui-form-item relative block">
+                        <span class="help-label"><b>关 键 字</b>Catalog keywords</span>
+                        <input class="layui-input" name="keywords" placeholder="" required
+                               value='{$vo.keywords|default=""}'>
+                    </label>
+
+                    <div class="layui-form-item label-required-prev">
+                        <span class="help-label"><b>栏目简介</b>Catalog description</span>
+                        <div class="relative block">
+                            <textarea class="layui-textarea" name="name" placeholder="栏目简介" required rows="10">{$vo.description|default=""}</textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item label-required-prev">
+                        <span class="help-label"><b>外部链接</b>Catalog url</span>
+                        <div class="relative block">
+                            <input class="layui-input" name="url" placeholder=""
+                                   value='{$vo.url|default=""}'>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-form-item label-required-prev">
+                        <span class="help-label"><b>访问模式</b>Catalog mode</span>
+                        <div class="relative block">
+                            <select name='mode' class='layui-select' lay-search>
+                                <option selected value='0'>动态</option>
+                                <option value='1'>静态</option>
+                                <option value='2'>伪静态</option>
+                            </select>
+                        </div>
+                    </div>
+                    <label class="layui-form-item relative block">
+                        <span class="help-label"><b>绑定域名</b>Catalog url</span>
+                        <input class="layui-input" name="url" placeholder="" required
+                               value='{$vo.url|default=""}'>
+                    </label>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-form-item label-required-prev">
+                        <span class="help-label"><b>首页模板</b>Catalog template_index</span>
+                        <div class="relative block">
+                            <input class="layui-input" name="template[index]" placeholder=""
+                                   value='{$vo.template_index|default="[TPL]/category.index.htm"}'>
+                        </div>
+                    </div>
+                    <div class="layui-form-item label-required-prev">
+                        <span class="help-label"><b>列表模板</b>Catalog template_list</span>
+                        <div class="relative block">
+                            <input class="layui-input" name="template[list]" placeholder=""
+                                   value='{$vo.template_list|default="[TPL]/category.list.htm"}'>
+                        </div>
+                    </div>
+                    <div class="layui-form-item label-required-prev">
+                        <span class="help-label"><b>文章模板</b>Catalog url</span>
+                        <div class="relative block">
+                            <input class="layui-input" name="template[article]" placeholder=""
+                                   value='{$vo.template_list|default="[TPL]/article.htm"}'>
+                        </div>
+                    </div>
+                    <div class="layui-form-item label-required-prev">
+                        <span class="help-label"><b>标签模板</b>Catalog template_tag</span>
+                        <div class="relative block">
+                            <input class="layui-input" name="template[tag]" placeholder=""
+                                   value='{$vo.template_list|default="[TPL]/tag.htm"}'>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="label label-info"><b class="color-red">[TPL]：</b>为系统设置的模板,自动匹配</div>
+                        <div class="label label-info"><b class="color-red">栏目首页模板：</b>每个栏目的首页模板(可制作用于频道封面、单页等)</div>
+                        <div class="label label-info"><b class="color-red">栏目列表模板：</b>当栏目有分页且页号大于1时使用</div>
+                    </div>
+
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-form-item label-required-prev">
+                        <span class="help-label"><b>栏目内容</b>News Content</span>
+                        <div class="relative block">
+                            <textarea class="layui-hide" name="content"
+                                      placeholder="请输入文章内容">{$vo.content|default=''}</textarea>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="hr-line-dashed"></div>
+        {notempty name='vo.id'}<input name='id' type='hidden' value='{$vo.id}'>{/notempty}
+        <div class="layui-form-item text-center">
+            <button class="layui-btn" type="submit">保存数据</button>
+            <button class="layui-btn layui-btn-danger" data-history-back data-confirm="确定要取消编辑吗？" type='button'>取消编辑
+            </button>
+        </div>
+    </div>
+
+</form>
+
+<script>
+    $('input[name="pic"]').uploadOneImage();
+    require(['ckeditor'], function () {
+        window.createEditor('[name=content]', {height: 350})
+    });
+</script>
+{/block}

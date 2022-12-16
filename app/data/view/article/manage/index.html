@@ -1,0 +1,70 @@
+{extend name='../../admin/view/table'}
+
+{block name="button"}
+<!--{if auth("add")}-->
+<button data-open='{:url("add")}' class='layui-btn layui-btn-sm layui-btn-primary'>添加文章</button>
+<!--{/if}-->
+
+<!--{if auth("remove")}-->
+<button data-action='{:url("remove")}' data-table-id="NewsTable" data-rule="id#{id}" data-confirm="确定要批量删除文章吗？" class='layui-btn layui-btn-sm layui-btn-primary'>批量删除</button>
+<!--{/if}-->
+
+<!--{if auth("news.mark/index")}-->
+<button class='layui-btn layui-btn-sm layui-btn-primary' data-modal='{:url("news.mark/index")}' data-title="标签管理" data-width="920px">标签管理</button>
+<!--{/if}-->
+{/block}
+
+{block name="content"}
+<div class="layui-tab layui-tab-card">
+    <ul class="layui-tab-title">
+        {foreach ['index'=>'文章管理','recycle'=>'回 收 站'] as $k=>$v}{if isset($type) and $type eq $k}
+        <li data-open="{:url('index')}?type={$k}" class="layui-this">{$v}</li>
+        {else}
+        <li data-open="{:url('index')}?type={$k}">{$v}</li>
+        {/if}{/foreach}
+    </ul>
+    <div class="layui-tab-content">
+        {include file='news/item/index_search'}
+        <table id="NewsTable" data-url="{:sysuri()}" data-target-search="form.form-search"></table>
+    </div>
+</div>
+{/block}
+
+{block name='script'}
+<script>
+    $(function () {
+        // 初始化表格组件
+        $('#NewsTable').layTable({
+            even: true, height: 'full',
+            sort: {field: 'sortnum desc,id asc', type: 'desc'},
+            where: {type: '{$type|default="index"}'},
+            cols: [[
+                {checkbox: true, fixed: true},
+                {field: 'id', title: 'ID', align: "center",sort: true, width: 80},
+                {field: 'title', title: '标题', align: 'left', minWidth: 500},
+                {field: 'cid', title: '栏目', align: 'left', minWidth: 100},
+                {field: 'editor', title: '编辑', align: 'center', minWidth: 110},
+                {field: 'hits', title: '点击', align: 'center', width: 80},
+                {field: 'pubdate', title: '创建时间', align: 'center', minWidth: 170},
+                {toolbar: '#toolbar', title: '操作面板', align: 'center', minWidth: 80, fixed: 'right'},
+            ]]
+        });
+    });
+
+</script>
+
+<!-- 数据操作工具条模板 -->
+<script type="text/html" id="toolbar">
+    <!--{if auth("view") and isset($type) and $type eq 'index'}-->
+    <a class="layui-btn layui-btn-primary layui-btn-sm" data-open='{:url("view")}?id={{d.id}}'>预 览</a>
+    <!--{/if}-->
+
+    <!--{if auth("edit") and isset($type) and $type eq 'index'}-->
+    <a class="layui-btn  layui-btn-sm" data-open='{:url("edit")}?id={{d.id}}'>编 辑</a>
+    <!--{/if}-->
+
+    <!--{if auth("remove") and isset($type) and $type eq 'index'}-->
+    <a class="layui-btn layui-btn-danger layui-btn-sm" data-action="{:url('remove')}" data-value="id#{{d.id}}" data-confirm="确定要删除文章吗?">删 除</a>
+    <!--{/if}-->
+</script>
+{/block}

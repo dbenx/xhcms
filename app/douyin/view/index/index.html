@@ -1,0 +1,86 @@
+{extend name="../../admin/view/main"}
+
+{block name="button"}
+<!--{if auth("add")}-->
+<button class='layui-btn layui-btn-sm layui-btn-primary' data-open='{:url("add")}'>添加商品</button>
+<!--{/if}-->
+
+{if isset($type) and $type eq 'index'}
+<!--{if auth("remove")}-->
+<button class='layui-btn layui-btn-sm layui-btn-primary' data-action='{:url("remove")}'
+        data-rule="code#{key};deleted#1">删除商品
+</button>
+<!--{/if}-->
+{else}
+<!--{if auth("remove")}-->
+<button class='layui-btn layui-btn-sm layui-btn-primary' data-action='{:url("remove")}' data-confirm="确定要恢复这些数据吗？"
+        data-rule="code#{key};deleted#0">恢复商品
+</button>
+<!--{/if}-->
+{/if}
+
+<!--{if auth("goods.mark/index")}-->
+<button class='layui-btn layui-btn-sm layui-btn-primary' data-modal='{:url("shop.mark/index")}' data-title="标签管理"
+        data-width="920px">标签管理
+</button>
+<!--{/if}-->
+{/block}
+
+{block name="content"}
+<div class="layui-tab layui-tab-card think-bg-white">
+
+    <div class="layui-tab-content">
+
+        <table class="layui-table margin-top-10" lay-skin="line">
+            {notempty name='list'}
+            <thead>
+            <tr>
+                <th class='list-table-check-td think-checkbox'>
+                    <label><input data-auto-none data-check-target='.list-check-box' type='checkbox'></label>
+                </th>
+                <th class='list-table-sort-td'> 视频ID</th>
+                <th class='text-left nowrap'>用户信息</th>
+                <th class='text-left nowrap'></th>
+                <th class='text-left nowrap'>评论</th>
+                <th>点赞</th>
+                <th>评论日期</th>
+            </tr>
+            </thead>
+            {/notempty}
+            <tbody>
+            {foreach $list as $key=>$vo}
+            <tr>
+                <td class='list-table-check-td think-checkbox'>
+                    <label><input class="list-check-box" type='checkbox' value='{$vo.id}'></label>
+                </td>
+                <td>
+                    <a href="https://www.douyin.com/video/{$vo.aweme_id}" target="_blank">{$vo.aweme_id}</a>
+                </td>
+                <td class='list-table-sort-td'>
+                    <div class="headimg headimg-md" data-tips-hover="" data-tips-image=""
+                         data-lazy-src="{$vo.avatar_thumb}" data-lazy-loaded="true"
+                         style="background-image: url({$vo.avatar_thumb});"></div>
+                </td>
+                <td class='nowrap'>
+                       <div class="inline-block sub-span-blue">
+                        <div>昵称：<span><a href="https://www.douyin.com/user/{$vo.sec_uid}" target="_blank">{$vo.nickname|default='--'}</a> </span></div>
+                        <div>IP：<span>{$vo.ip_label|default='--'}</span></div>
+                    </div>
+                </td>
+                <td class="wrap">
+                    {$vo.text}
+                </td>
+                <td class='nowrap'>
+                    {$vo.digg_count}
+                </td>
+                <td class='nowrap sub-strong-blue'>
+                    {$vo.create_time}
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+        {empty name='list'}<span class="notdata">没有记录哦</span>{else}{$pagehtml|raw|default=''}{/empty}
+    </div>
+</div>
+{/block}

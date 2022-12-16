@@ -1,0 +1,64 @@
+{extend name="../../admin/view/main"}
+{block name="button"}
+<!--{if auth("add")}-->
+<button class='layui-btn layui-btn-sm layui-btn-primary' data-modal='{:url("add")}'>添加班次</button>
+<!--{/if}-->
+
+
+<!--{if auth("remove")}-->
+<button class='layui-btn layui-btn-sm layui-btn-primary' data-action='{:url("remove")}'data-confirm="确定要批量删除班次吗？"  data-rule="id#{key};deleted#1">批量删除</button>
+<!--{/if}-->
+{/block}
+
+{block name="content"}
+<div class="layui-tab layui-tab-card">
+
+    <div class="layui-tab-content">
+
+        <table class="layui-table margin-top-10" lay-skin="line">
+            {notempty name='list'}
+            <thead>
+            <tr>
+                <th class='list-table-check-td think-checkbox'>
+                    <label><input data-auto-none data-check-target='.list-check-box' type='checkbox'></label>
+                </th>
+                <th>ID</th>
+                <th>班次</th>
+                <th>接线时间</th>
+                <th></th>
+            </tr>
+            </thead>
+            {/notempty}
+            <tbody>
+            {foreach $list as $key=>$vo}
+            <tr>
+                <td class='list-table-check-td think-checkbox'>
+                    <label><input class="list-check-box" type='checkbox' value='{$vo.id}'></label>
+                </td>
+                <td class="nowrap relative">
+                    {$vo.id}
+                </td>
+                <td class='nowrap'>
+                    {$vo.name}
+                </td>
+                <td class="nowrap">
+                    {$vo.time}
+                </td>
+
+                <td class="nowrap">
+                    <!--{if auth("edit")}-->
+                    <a class="layui-btn layui-btn-xs" data-modal='{:url("edit")}?id={$vo.id}'>编 辑</a>
+                    <!--{/if}-->
+                    <!--{if auth("remove")}-->
+                    <a class="layui-btn layui-btn-xs layui-btn-danger" data-action="{:url('remove')}" data-confirm="确定要删除吗？" data-value="id#{$vo.id};deleted#1">删 除</a>
+                    <!--{/if}-->
+                </td>
+
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+        {empty name='list'}<span class="notdata">没有记录哦</span>{else}{$pagehtml|raw|default=''}{/empty}
+    </div>
+</div>
+{/block}

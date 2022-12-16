@@ -1,0 +1,35 @@
+
+<form action="{:sysuri()}" method="post" data-auto="true" class="layui-form layui-card" data-table-id="RoleTable">
+
+    <div class="layui-card-body padding-left-40">
+
+        <label class="layui-form-item relative block">
+            <span class="help-label"><b>班次名称</b>Permission Name</span>
+            <input maxlength="100" class="layui-input" name="name" value='{$vo.name|default=""}' required placeholder="请输入班次名称">
+            <span class="help-block">如：早班，晚班！</span>
+        </label>
+
+        <label class="layui-form-item relative block">
+            <span class="help-label"><b>工作时间</b>Permission time</span>
+                <input type="text" name="time" class="layui-input" value='{$vo.time|default=" - "}' id="test9" placeholder=" - ">
+                <span class="help-block">班次时间范围</span>
+        </label>
+
+    </div>
+
+    <div class="hr-line-dashed"></div>
+    {notempty name='vo.id'}<input type='hidden' value='{$vo.id}' name='id'>{/notempty}
+
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" type='button' data-confirm="确定要取消编辑吗？" data-close>取消编辑</button>
+    </div>
+</form>
+<script>
+    laydate.render({
+        elem: '#test9'
+        ,type: 'time'
+        ,range: true
+    });
+</script>
+

@@ -1,0 +1,169 @@
+{extend name="../../admin/view/table"}
+{block name="button"}
+<!--{if auth("add")}-->
+<button data-modal='{:url("add")}' data-title="添加" class='layui-btn layui-btn-sm layui-btn-primary'>添加栏目</button>
+<!--{/if}-->
+{/block}
+{block name="content"}
+<div class="think-box-shadow">
+    <fieldset>
+        <legend>匹配规则</legend>
+        <div class="layui-form-item layui-inline">
+            <button id="show" class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe61a;</i> 全部展开</button>
+            <button id="hide" class="layui-btn layui-btn-primary"><i class="layui-icon">&#xe619;</i> 全部折叠</button>
+        </div>
+    </fieldset>
+    <table class="layui-hidden" id="treeTable" lay-filter="treeTable"></table>
+</div>
+{/block}
+{block name='script'}
+<script type="text/javascript">
+
+    layui.config({
+        base: '/static/plugs/layui_exts/tableTreeDj/'
+    });
+    layui.use(['table', 'tableTreeDj'], function () {
+        const table = layui.table
+        const tableTree = layui.tableTreeDj;
+        const $ = layui.$;
+        const cols = [[
+            {field: 'sortnum', title: '排序权重', width: 80, align: 'center', templet: '#SortInputTpl'}
+            , {field: 'name', title: '栏目名称', width: 300, align: "left"}
+            , {field: 'title', title: '', Minwidth: 765,   align: "left",templet: '#cataloginfo'}
+            ,{ title: '操作面板', align: 'center',width: 500,toolbar: '#toolbar',fixed: 'right'}
+        ]]
+
+
+        // 表格配置
+        const objTable = {
+            elem: '#treeTable'
+            , url: '{:url("json")}'
+            , limit: 2
+            , cols: cols
+            , id: 'list'
+            , loading: true
+            ,page:false
+        }
+
+        const objTree = {
+            title: 'name',
+            keyId: "cid",
+            keyPid: "rootid",
+            indent: '&nbsp;&nbsp;&nbsp;&nbsp;',
+            icon: {
+                open: 'layui-icon layui-icon-triangle-d', // 展开时候图标
+                close: 'layui-icon layui-icon-triangle-r', // 折叠时候图标
+            }
+            , showCache: true, //是否开启展开折叠缓存,默认不开启
+        }
+
+        // tableTree 渲染表格
+        //table.render(objTable)
+        tableTree.render(objTable, objTree);
+
+        tableTree.cache(tableTree.getShowCache(), [])
+
+        $('#show').click(() => {
+            tableTree.showAll(objTable);
+        });
+        $('#hide').click(() => {
+            tableTree.hideAll(objTable);
+        });
+
+        $('#showSn').click(() => {
+            const run = tableTree.getRun();
+            const dataIndex = run.dataIndex;
+            for (let id in dataIndex) {
+                let has = true;
+                let sn = id;
+                let idNow = id;
+
+                while (has) {
+                    if (!!run.childParent[idNow]) {
+                        let pid = run.childParent[idNow];
+                        sn = pid + " - " + sn;
+                        idNow = pid
+                    } else {
+                        break;
+                    }
+                }
+                $("[lay-id='" + objTable.id + "'] table tr[data-index='" + dataIndex[id] + "'] td[data-field=" + "sn" + "]").children("div").html(sn);
+            }
+        });
+
+        $('#getData').click(() => {
+            const data = tableTree.getDataOri();
+            console.log(data);
+        });
+
+        $('#reload').click(() => {
+            objTable.where = {key: "val"}
+            tableTree.reload(objTable, 'list');
+        });
+        // 数据状态切换操作
+        layui.form.on('switch(StatusSwitch)', function (obj) {
+            $.form.load("{:url('state')}", {id: obj.value, status: obj.elem.checked > 0 ? 1 : 0}, 'post', function (ret) {
+                if (ret.code < 1) $.msg.error(ret.info, 3, function () {
+                    $('#treeTable').trigger('reload'); // 操作异常时重载数据
+                });
+                else{
+                    objTable.where = {key: "val"}
+                    tableTree.reload(objTable, 'list');
+                    layer.msg(ret.info);
+                }
+                return false;
+            }, false);
+        });
+
+    });
+
+</script>
+<!-- 规则导出 -->
+<script type="text/html" id="export">
+    <!--{if auth("export")}-->
+    {{# if(d.pid==0){ }}
+    <button type="button" class="layui-btn layui-btn-primary layui-border-black layui-btn-xs" data-form-export="{:url('export')}?pid={{d.id}}" >
+        <i class="layui-icon">&#xe601;</i>
+    </button>
+    {{# } }}
+    <!--{/if}-->
+</script>
+<!-- 数据状态切换模板 -->
+<script type="text/html" id="cataloginfo">
+    <span class="layui-btn layui-btn-xs" style="background: #009688;">cid:{{d.cid}}</span>
+    <span class="layui-btn layui-btn-xs" style="background: #5FB878;">pid:{{d.pid}}</span>
+    <span class="layui-btn layui-btn-xs" style="background: #393D49;">0条记录</span>
+</script>
+
+<!-- 列表排序权重模板 -->
+<script type="text/html" id="SortInputTpl">
+    <input min="0" type="number" data-blur-number="0" data-action-blur="{:sysuri()}"
+           data-value="id#{{d.id}};action#sort;sort#{value}" data-loading="false" value="{{d.sortnum}}"
+           class="layui-input text-center">
+</script>
+
+<script type="text/html" id="toolbar">
+    <!--{if auth("addcatalog")}-->
+    <a class="layui-btn layui-btn-primary layui-border-primary layui-btn-sm" data-title="子栏目" data-open='{:url("addcatalog")}?pid={{d.id}}'><i class="layui-icon">&#xe654;</i>   子栏目</a>
+    <!--{/if}-->
+
+    <!--{if auth("view")}-->
+    <a class="layui-btn layui-btn-primary layui-btn-sm" data-title="访问" data-modal='{:url("view")}'><i class="layui-icon">&#xe64c;</i> 访问</a>
+    <!--{/if}-->
+
+    <!--{if auth("addarticle")}-->
+    <a class="layui-btn layui-btn-sm layui-btn-primary layui-btn-sm" data-title="访问" data-modal='{:url("addarticle")}?id={{d.id}}'><i class="layui-icon">&#xe642;</i> 添加文章</a>
+    <!--{/if}-->
+
+    <!--{if auth("editcatalog")}-->
+    <a data-dbclick class="layui-btn layui-btn-sm" data-title="编辑"
+       data-modal='{:url("editcatalog")}?id={{d.id}}&pid={{d.pid}}'><i class="layui-icon">&#xe6b2;</i> 编 辑</a>
+    <!--{/if}-->
+
+    <!--{if auth("remove")}-->
+    <a class="layui-btn layui-btn-sm layui-btn-danger" data-confirm="确定要永久删除此栏目吗？" data-action="{:url('remove')}" data-value="id#{{d.id}}"><i class="layui-icon">&#xe640;</i> 删 除</a>
+    <!--{/if}-->
+
+</script>
+
+{/block}

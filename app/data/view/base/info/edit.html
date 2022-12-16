@@ -1,0 +1,30 @@
+<form action="{:sysuri()}" method="post" data-auto="true" class="layui-form layui-card" data-table-id="TagsData">
+    <div class="layui-card-body padding-left-40">
+
+        <label class="layui-form-item relative block">
+            <span class="help-label"><b>电话</b></span>
+            <input class="layui-input" name="name" readonly placeholder="" required value="{$vo.telphone|default=''}"/>
+        </label>
+
+        <div class="layui-form-item relative">
+            <span class="help-label"><b>信息归属</b></span>
+            <select name='rootid' class='layui-select' lay-search>
+                {foreach $username as $user}
+                {eq name='user.id' value='$vo.uid'}
+                <option selected value='{$user.id}'>{$user.nickname}</option>
+                {else}
+                <option value='{$user.id}'>{$user.nickname}</option>
+                {/eq}
+                {/foreach}
+            </select>
+        </div>
+
+    </div>
+
+    <div class="hr-line-dashed"></div>
+    {notempty name='vo.id'}<input name='id' type='hidden' value='{$vo.id}'>{/notempty}
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" data-close type='button' data-confirm="确定要取消修改吗？">取消编辑</button>
+    </div>
+</form>

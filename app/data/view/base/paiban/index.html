@@ -1,0 +1,72 @@
+{extend name="../../admin/view/main"}
+
+{block name="content"}
+<div class="layui-tab layui-tab-card think-bg-white">
+    <ul class="layui-tab-title">
+        {foreach ['lmonth'=>'上月排班','index'=>'本月排班','nmonth'=>'下月排班'] as $k=>$v}
+        {if isset($type) and $type eq $k}
+        <li class="layui-this" data-open="{:url('index')}?type={$k}">{$v}</li>
+        {else}
+        <li data-open="{:url('index')}?type={$k}">{$v}</li>
+        {/if}{/foreach}
+    </ul>
+    <div class="layui-tab-content">
+
+        <table class="layui-table margin-top-10" lay-skin="line">
+            <thead>
+            <tr>
+                <th class='text-center nowrap'>日期<br>姓名</th>
+                {foreach $tabletit as $k=>$v}
+                    <th class='text-center nowrap'>{$v['date']}<br>{$v['week']}</th>
+                {/foreach}
+            </tr>
+            </thead>
+            <tbody>
+
+            {foreach $list as $k=>$v}
+            <tr>
+                <td class='nowrap'>{$v[0]['name']|responses}</td>
+                {foreach $v as $kk=>$vv}
+                    <td class='list-table-check-td think-checkbox'>
+                        <select class="layui-select"  onchange="javascript:uppaiban('{$vv.id}',this);"  name="banci{$kk}">
+                            {foreach $banci as $menu}
+                            {eq name='menu.id' value='$vv.mark'}
+                                 <option selected value='{$menu.id}'>{$menu.name}</option>
+                             {else}
+                            <option value='{$menu.id}'>{$menu.name}</option>
+                            {/eq}
+                            {/foreach}
+                        </select>
+                    </td>
+                {/foreach}
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+{/block}
+
+{block name='script'}
+<script>
+    function uppaiban(id,that){
+     var that=that.value;
+     console.log(that);
+        $.ajax({
+            url: "{:url('banci')}",
+            type: 'POST',
+            dataType: "json",
+            data: { id: id,bc:that},
+            success: function (data) {
+                if(data.code===0){
+                    layer.msg(data.info)
+                }
+
+            }
+        });
+    }
+</script>
+
+{/block}

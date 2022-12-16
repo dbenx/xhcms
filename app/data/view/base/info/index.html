@@ -1,0 +1,59 @@
+{extend name="../../admin/view/table"}
+
+{block name="content"}
+<div class="layui-tab layui-tab-card think-bg-white">
+    <div class="layui-tab-content">
+        {include file='base/info/index_search'}
+        <!--{if auth("allinfo")}-->
+        <table id="DataTable" data-url="{:sysuri('allinfo')}" data-target-search="form.form-search"></table>
+        <!--{else}-->
+        <table id="DataTable" data-url="{:sysuri()}" data-target-search="form.form-search"></table>
+        <!--{/if}-->
+    </div>
+</div>
+{/block}
+{block name='script'}
+
+<script>
+    $(function () {
+        $('#DataTable').layTable({
+            even: true, height: 'full',
+            cols: [[
+                {checkbox: true},
+                {field: 'create_time', title: '创建时间', align: 'center', minWidth: 170},
+                {field: 'name', title: '姓名', align: "left", minWidth: 100},
+                {field: 'telphone', title: '电话', align: "left", width: 120},
+                {field: 'gender', title: '性别', align: "left", width: 80},
+                {field: 'uid', title: '线索归属', align: 'center', minWidth: 170},
+                {
+                    field: 'telphone', title: '回访', width: 60, align: 'center', templet: function (d) {
+                        if (!d.telphone) return '-';
+                        return layui.laytpl('<div class="headimg headimg-ss shadow-inset margin-0" data-tips-image data-tips-hover data-lazy-src=https://tenapi.cn/qr/?txt=http://{$_SERVER.HTTP_HOST}{:sysuri("calltel")}?tel={{d.telphone}}></div>').render(d);
+                    }
+                },
+                {field: 'adv_name', title: '广告主名称', align: 'center', minWidth: 170},
+                {field: 'ad_name', title: '计划名称', align: 'center', minWidth: 170},
+                {field: 'convert_status', title: '转换类型', align: 'center', width: 100},
+                {field: 'clue_convert_status', title: '转换状态', align: 'center', width: 120},
+                {field: 'app_name', title: '流量来源', align: 'center', width: 120},
+                {field: 'clue_source', title: '线索渠道', align: 'center', minWidth: 170},
+                {field: 'location', title: '定位城市', align: 'center', minWidth: 170},
+                {field: 'external_url', title: '落地页链接', align: 'center', minWidth: 300},
+                {toolbar: '#toolbar', title: '操作面板', align: 'center', fixed: 'right', minWidth: 100}
+            ]]
+        });
+    });
+</script>
+<!-- 数据操作工具条模板 -->
+<script type="text/html" id="toolbar">
+    <!--{if auth("edit")}-->
+    <a class="layui-btn layui-btn-danger layui-btn-sm" data-modal='{:url("edit")}?id={{d.id}}'><i
+            class="layui-icon layui-icon-share layui-font-12"></i> 分 配</a>
+    <!--{/if}-->
+</script>
+
+
+{/block}
+
+
+
