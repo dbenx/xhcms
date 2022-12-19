@@ -1,0 +1,75 @@
+{extend name="../../admin/view/main"}
+
+{block name="content"}
+
+<form action="{:sysuri()}" method="post" data-auto="true" class="layui-form layui-card" id="GoodsForm">
+    <div class="layui-card-body">
+
+
+        <label class="layui-form-item block relative">
+            <span class="help-label"><b>视频标题</b>Vodeo Title</span>
+            <input class="layui-input" name="title" placeholder="请输入视频名称" required value="{$vo.title|default=''}">
+        </label>
+
+
+        <label class="layui-form-item block">
+            <span class="help-label"><b>视频内容</b>Vodeo </span>
+            <textarea class="layui-textarea" name="video"
+                      placeholder="请输入视频内容，直接从分享连接复制内容">{$vo.video|default=''|raw}</textarea>
+        </label>
+
+        <label class="layui-form-item block">
+            <!--{notempty name='marks'}-->
+            <div class="layui-form-item label-required-prev">
+                <span class="help-label"><b>地域</b>Vodeo region  不选择代表不限制地域</span>
+                <div class="layui-textarea help-checks">
+                    {foreach $marks as $key=>$tag}{if isset($vo.region) && is_array($vo.region) && in_array($tag, $vo.region)}
+                    <label class="think-checkbox notselect"><input checked lay-ignore name="region[]" type="checkbox" value="{$tag}"> {$tag}</label>
+                    {else}
+                    <label class="think-checkbox notselect"><input lay-ignore name="region[]" type="checkbox" value="{$tag}"> {$tag}</label>
+                    {/if}{/foreach}
+                </div>
+            </div>
+            <!--{/notempty}-->
+
+        </label>
+
+
+        <label class="layui-form-item block">
+            <!--{notempty name='marks'}-->
+            <div class="layui-form-item label-required-prev">
+                <span class="help-label"><b>关键词标签</b>Vodeo key_lable 命中关键词标签</span>
+                <div class="layui-textarea help-checks">
+                    {foreach $marks as $key=>$tag}{if isset($vo.region) && is_array($vo.region) && in_array($tag, $vo.region)}
+                    <label class="think-checkbox notselect"><input checked lay-ignore name="region[]" type="checkbox" value="{$tag}"> {$tag}</label>
+                    {else}
+                    <label class="think-checkbox notselect"><input lay-ignore name="region[]" type="checkbox" value="{$tag}"> {$tag}</label>
+                    {/if}{/foreach}
+                </div>
+            </div>
+            <!--{/notempty}-->
+
+        </label>
+
+
+        <label class="layui-form-item block relative">
+            <span class="help-label"><b>视频标题</b>Vodeo Title</span>
+            <input class="layui-input" name="title" placeholder="请输入视频名称" required value="{$vo.title|default=''}">
+        </label>
+
+
+        <div class="hr-line-dashed margin-top-40"></div>
+        {notempty name='vo.id'}<input name="id" type="hidden" value="{$vo.id}">{/notempty}
+        <input name="uid" type="hidden" value="{:session('user.id')}">
+
+        <div class="layui-form-item text-center">
+            <button class="layui-btn layui-btn-danger" ng-click="pageBack()" type="button">取消编辑</button>
+            <button class="layui-btn" type="submit">保存商品</button>
+        </div>
+    </div>
+</form>
+{/block}
+
+{block name='script'}
+
+{/block}
