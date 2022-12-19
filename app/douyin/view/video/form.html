@@ -17,7 +17,10 @@
             <textarea class="layui-textarea" name="video"
                       placeholder="请输入视频内容，直接从分享连接复制内容">{$vo.video|default=''|raw}</textarea>
         </label>
-
+        <label class="layui-form-item block relative">
+            <span class="help-label"><b>视频标题</b>Vodeo num 默认100，不填写代表采集所有数据</span>
+            <input class="layui-input" name="num" placeholder="数量" required value="{$vo.num|default='100'}">
+        </label>
         <label class="layui-form-item block">
             <!--{notempty name='marks'}-->
             <div class="layui-form-item label-required-prev">
@@ -31,31 +34,26 @@
                 </div>
             </div>
             <!--{/notempty}-->
-
         </label>
 
 
         <label class="layui-form-item block">
-            <!--{notempty name='marks'}-->
+            <!--{notempty name='lables'}-->
             <div class="layui-form-item label-required-prev">
-                <span class="help-label"><b>关键词标签</b>Vodeo key_lable 命中关键词标签</span>
+                <span class="help-label"><b>关键词标签</b>key_lable 命中关键词标签</span>
                 <div class="layui-textarea help-checks">
-                    {foreach $marks as $key=>$tag}{if isset($vo.region) && is_array($vo.region) && in_array($tag, $vo.region)}
-                    <label class="think-checkbox notselect"><input checked lay-ignore name="region[]" type="checkbox" value="{$tag}"> {$tag}</label>
+                    {foreach $lables as $key=>$tag}{if isset($vo.lable) && is_array($vo.lable) && in_array($tag.title, $vo.lable)}
+                    <label class="think-checkbox notselect"><input checked lay-ignore name="key_label[]" type="checkbox" value="{$tag.title}"> {$tag.title}</label>
                     {else}
-                    <label class="think-checkbox notselect"><input lay-ignore name="region[]" type="checkbox" value="{$tag}"> {$tag}</label>
+                    <label class="think-checkbox notselect"><input lay-ignore name="key_label[]" type="checkbox" value="{$tag.title}"> {$tag.title}</label>
                     {/if}{/foreach}
                 </div>
             </div>
             <!--{/notempty}-->
-
         </label>
 
 
-        <label class="layui-form-item block relative">
-            <span class="help-label"><b>视频标题</b>Vodeo Title</span>
-            <input class="layui-input" name="title" placeholder="请输入视频名称" required value="{$vo.title|default=''}">
-        </label>
+
 
 
         <div class="hr-line-dashed margin-top-40"></div>

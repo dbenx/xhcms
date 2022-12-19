@@ -1,0 +1,33 @@
+<form action="{:sysuri()}" data-table-id="TagsData" class="layui-form layui-card" data-auto="true" method="post">
+    <div class="layui-card-body padding-left-40">
+
+        <label class="layui-form-item relative block">
+            <span class="help-label"><b>标签名称</b>Mark title</span>
+            <label class="relative block">
+                <textarea class="layui-textarea" name="name" placeholder="请输入标签，一行一个">{$vo.name|default=''}</textarea>
+            </label>
+            <span class="help-block"><b>必填，</b>请填写标签名称，建议字符不要太长</span>
+        </label>
+
+        <div class="layui-form-item relative">
+            <span class="help-label"><b>常用标签</b></span>
+            <label class="relative block">
+                <span class="layui-bg-green padding-5 margin-5"><b>在哪</b></span>
+                <span class="layui-bg-green padding-5 margin-5"><b>哪里</b></span>
+                <span class="layui-bg-green padding-5 margin-5"><b>好不好</b></span>
+                <span class="layui-bg-green padding-5 margin-5"><b>多少钱</b></span>
+                <span class="layui-bg-green padding-5 margin-5"><b>费用</b></span>
+            </label>
+
+        </div>
+
+    </div>
+
+    <div class="hr-line-dashed"></div>
+    {notempty name='vo.id'}<input name='id' type='hidden' value='{$vo.id}'>{/notempty}
+
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit'>保存数据</button>
+        <button class="layui-btn layui-btn-danger" data-close type='button' data-confirm="确定要取消修改吗？">取消编辑</button>
+    </div>
+</form>

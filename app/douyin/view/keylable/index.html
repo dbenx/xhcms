@@ -2,42 +2,34 @@
 
 {block name="button"}
 <!--{if auth("add")}-->
-<button class='layui-btn layui-btn-sm layui-btn-primary' data-open='{:url("add")}'>添加视频</button>
+<button class='layui-btn layui-btn-sm layui-btn-primary' data-modal='{:url("add")}'>添加标签</button>
 <!--{/if}-->
 
 <!--{if auth("remove")}-->
-<button class='layui-btn layui-btn-sm layui-btn-primary' data-action='{:url("remove")}'
-        data-rule="code#{key};deleted#1">批量删除
-</button>
+<button data-action='{:url("remove")}' data-table-id="LableTable" data-rule="id#{id}" data-confirm="确定要批量删除视频吗？" class='layui-btn layui-btn-sm layui-btn-primary'>批量删除</button>
 <!--{/if}-->
 
 {/block}
 
 {block name="content"}
 <div class="think-box-shadow">
-    <table id="UserTable" data-url="{:sysuri('index')}" data-target-search="form.form-search"></table>
+    <table id="LableTable" data-url="{:sysuri('index')}" data-target-search="form.form-search"></table>
 </div>
-
-
 {/block}
-
 
 {block name='script'}
 <script>
     $(function () {
-        $('#UserTable').layTable({
+        $('#LableTable').layTable({
             even: true, height: 'full',
             sort: {field: 'id', type: 'desc'},
             cols: [[
                 {checkbox: true},
-                {field: 'id', title: 'ID', width: 80, sort: true, align: 'center'},
-                {field: 'title', title: '名称', minWidth: 100, align: 'center'},
-                {field: 'video', title: '视频内容', minWidth: 300, sort: true, align: 'center'},
-                {field: 'region', title: '地域', minWidth: 120},
-                {field: 'key_lable', title: '关键词标签', minWidth: 120},
-                {field: 'status', title: '账号状态', align: 'center', minWidth: 110, templet: '#StatusSwitchTpl'},
-                {field: 'create_at', title: '创建时间', minWidth: 100},
-                {toolbar: '#toolbar', title: '操作面板', align: 'center', minWidth: 80, fixed: 'right'}
+                {field: 'id', title: 'ID', width: 80,  align: 'center'},
+                {field: 'title', title: '名称', minWidth: 100},
+                {field: 'status', title: '账号状态', align: 'center', width: 160, templet: '#StatusSwitchTpl'},
+                {field: 'create_at', title: '创建时间', width: 180},
+                {toolbar: '#toolbar', title: '操作面板', align: 'center', width: 180, fixed: 'right'}
             ]]
         });
         // 数据状态切换操作
@@ -45,9 +37,9 @@
             var data = {id: obj.value, status: obj.elem.checked > 0 ? 1 : 0};
             $.form.load("{:url('state')}", data, 'post', function (ret) {
                 if (ret.code < 1) $.msg.error(ret.info, 3, function () {
-                    $('#UserTable').trigger('reload');
+                    $('#LableTable').trigger('reload');
                 }); else {
-                    $('#UserTable').trigger('reload')
+                    $('#LableTable').trigger('reload')
                 }
                 return false;
             }, false);

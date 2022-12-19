@@ -7,9 +7,7 @@
 
 
 <!--{if auth("remove")}-->
-<button class='layui-btn layui-btn-sm layui-btn-primary' data-action='{:url("remove")}'
-        data-rule="code#{key};deleted#1">删除视频
-</button>
+<button data-action='{:url("remove")}' data-table-id="VideoTable" data-rule="id#{id}" data-confirm="确定要批量删除视频吗？" class='layui-btn layui-btn-sm layui-btn-primary'>批量删除</button>
 <!--{/if}-->
 
 <!--{if auth("goods.mark/index")}-->
@@ -21,7 +19,7 @@
 
 {block name="content"}
 <div class="think-box-shadow">
-    <table id="UserTable" data-url="{:sysuri('index')}" data-target-search="form.form-search"></table>
+    <table id="VideoTable" data-url="{:sysuri('index')}" data-target-search="form.form-search"></table>
 </div>
 
 
@@ -31,7 +29,7 @@
 {block name='script'}
 <script>
     $(function () {
-        $('#UserTable').layTable({
+        $('#VideoTable').layTable({
             even: true, height: 'full',
             sort: {field: 'id', type: 'desc'},
             cols: [[
@@ -40,7 +38,7 @@
                 {field: 'title', title: '名称', minWidth: 100, align: 'center'},
                 {field: 'video', title: '视频内容', minWidth: 300, sort: true, align: 'center'},
                 {field: 'region', title: '地域', minWidth: 120},
-                {field: 'key_lable', title: '关键词标签', minWidth: 120},
+                {field: 'key_label', title: '关键词标签', minWidth: 120},
                 {field: 'status', title: '账号状态', align: 'center', minWidth: 110, templet: '#StatusSwitchTpl'},
                 {field: 'create_at', title: '创建时间', minWidth: 100},
                 {toolbar: '#toolbar', title: '操作面板', align: 'center', minWidth: 80, fixed: 'right'}
@@ -51,9 +49,9 @@
             var data = {id: obj.value, status: obj.elem.checked > 0 ? 1 : 0};
             $.form.load("{:url('state')}", data, 'post', function (ret) {
                 if (ret.code < 1) $.msg.error(ret.info, 3, function () {
-                    $('#UserTable').trigger('reload');
+                    $('#VideoTable').trigger('reload');
                 }); else {
-                    $('#UserTable').trigger('reload')
+                    $('#VideoTable').trigger('reload')
                 }
                 return false;
             }, false);
